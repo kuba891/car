@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>carGame</title>
+    <style> #map{
+        border: black solid 2px;
+        }
+       
+    </style>
+</head>
+<body>
+    <canvas id= "map"; width="1000" height="600"> </canvas>
+    <br>
+    <label id="lost" ></label>
+    <audio controls autoplay muted >
+      <source src="War Games (Ratne Igre) - Ayden George Remixes.mp3">
+    </audio>
+    <br>
+        <script>
+//values  
+//    <input type="range" id="volume" name="volume" min="0" max="11" />
+
+    let velocity=10;
+let unitSize=100;
+//player
+let playerX=950;
+let playerY=500;
+let gravityX=0;
+let timeGravityX=-1;
+let startDate=0;
+let changeGravityX=0;
+let previousGravityX=0;
+let jump=false;
+let realPlayerY;
+doubleJump=false;
+//pc
+let invisibilitypcX=-100;
+let invisibiltypcY=-100;
+let pcX= -50;
+let startPcY=["50", "250","450", "-100"];
+let pcY;
+let pcY2;
+let realPcX=playerX-unitSize;
+//colors
+let boardBackground= "white"
+let PcColorCar="yellow";
+let PlayerColorCar="red"
+//bolean
+let running=false;
+//random
+let random;
+//spead
+let frequency= document.getElementById("inputFrequency")
+frequency=Number;
+//ctx
+const map=document.querySelector("#map");
+const ctx=map.getContext("2d");
+borders();
+function borders(){
+ctx.beginPath();
+ctx.moveTo(0,200);
+ctx.lineTo(1000,200);
+ctx.moveTo(0,400);
+ctx.lineTo(1000,400);
+ctx.stroke();}
+function carsVisuality(colorCar, xAxis, yAxis, scale, scale){
+ctx.fillStyle=colorCar;
+ctx.fillRect(xAxis, yAxis, scale, scale);
+};
+carsVisuality(PlayerColorCar, playerX-unitSize, playerY,unitSize,unitSize);
+carsVisuality(PcColorCar, pcX-unitSize, pcY,unitSize,unitSize);
+
+document.addEventListener("keydown", pressEnter)
+function pressEnter(event){
+  const keyPressed= event.keyCode;
+  const enter= 13;
+ 
+  switch(keyPressed){
+      case(enter):
+     
+      running=true;
+      if( running==true){
+        pcX= -50;
+        randomSpawn();
+        pcY2random();
+       
+      var intervalek=setInterval(()=>{
+        if(running== false){
+          clearInterval(intervalek);
+        }
+        if( running==true){
+        
+        Clear();
+        carsVisuality(PcColorCar, pcX-unitSize, pcY,unitSize,unitSize);
+        carsVisuality(PcColorCar, pcX-unitSize, pcY2,unitSize,unitSize);
+
+        carsVisuality(PlayerColorCar, playerX-unitSize, playerY-previousGravityX,unitSize,unitSize);        
+
+        borders();
+        pcMove();
+        testTouch();
+        touch();    
+        borderRadius();
+        if(pcX>1000|| playerX>1000){
+          pcX= -50;
+          randomSpawn();
+        pcY2random();
+        };
+     //  console.log(gravityX);
+       //console.log(realPlayerY);
+        //console.log(pcY);
+        
+
+        if(timeGravityX>=0 && jump==true){
+        gravityTime();
+        gravity();
+       
+          if(playerY-previousGravityX>500){
+            jump=false;
+            previousGravityX=0;
+          }
+      }
+      if (gravityX<0){
+        gravityX=0;
+      }
+      realPlayerY=playerY-previousGravityX;
+    
+  }},50
+                 
+                 )
+                 inactivity();};
+
+     
+     
+     
+     
+  }
+ 
+  }
+  setInterval(() => {
+  if (running == false) {
+  }
+}, 20);
+  function testTouch(){
+    if(playerX+unitSize>pcX && pcX+unitSize> playerX);
+ // console.log("čuspičus")
+  }
+function Clear(){
+  ctx.fillStyle=boardBackground;
+  ctx.fillRect(0,0, 1000,600)
+}
+function speed(){
+    
+}
+function touch(){
+    if(realPlayerY-unitSize< pcY && realPlayerY>pcY-unitSize && playerX+unitSize>pcX && pcX+unitSize> playerX)
+  {
+    document.getElementById("lost").innerHTML="you lost ty rizz(ku) poctivej"
+    running=false;
+  }
+  if(realPlayerY-unitSize< pcY2 && realPlayerY>pcY2-unitSize && playerX+unitSize>pcX && pcX+unitSize> playerX)
+  
+  {
+    document.getElementById("lost").innerHTML="you lost ty rizz(ku) poctivej"
+    running=false;
+  }
+}
+document.addEventListener("keydown", moveByKeys)
+function moveByKeys(event){
+  const keyPressed= event.keyCode;
+  const up= 38;
+  const down=40;
+  switch(keyPressed){
+      case(up):
+      jump=true;
+      if(gravityX==0){
+        velocity=10;
+        doubleJump=true;
+
+      update();
+    gravityX=0;
+      timeGravityX=0;}
+      if(!gravityX==0 && doubleJump==true){
+        doubleJump=false;
+        velocity=1.06*velocity;
+    }
+      break;
+      case(down):
+      if(realPlayerY<500){
+        playerY+=10;}
+        if(realPlayerY>500){
+            playerY=500;
+            realPlayerY=500;
+
+    }
+      break;
+ 
+  }
+  }
+  //speedVolume=document.getElementById("volume");
+ // console.log(speedVolume);
+/*  document.addEventListener("keydown", moveByKeys)
+function moveByKeys(event){
+  const keyPressed= event.keyCode;
+  const a= 65;
+  switch(keyPressed){
+      case(a):
+    running=false;
+  break}}*/
+  function pcMove(){
+    pcX+=10;
+  }
+   function randomSpawn (){
+     random= Math.ceil(Math.random()*5);
+   //  console.log(random);
+     switch (random) {
+    case 1:
+      pcY = startPcY[0];
+      
+      break;
+    case 2:
+      pcY = startPcY[1];
+      break;
+    case 3:
+      pcY = startPcY[2];
+      break;
+    case 4:
+      pcY = startPcY[3];
+      
+      break;
+    case 5:
+      pcY = startPcY[3];
+      
+      break;
+  }
+}
+   
+     
+
+   
+
+   
+   function pcY2random(){
+    let random2=Math.ceil(Math.random()*5)
+    switch (random2) {
+    case 1:
+      pcY2 = startPcY[0];
+      break;
+    case 2:
+      pcY2 = startPcY[1];
+      break;
+    case 3:
+      pcY2 = startPcY[2];
+      break;
+    case 4:
+      pcY2 = startPcY[3];
+      
+
+      break;
+
+    case 5:
+      pcY2 = startPcY[3];
+      
+
+      break;
+  }
+}
+function borderRadius(){
+    if (realPlayerY>500){
+        realPlayerY=500;
+        playerY=500;
+    }
+}
+const onSquare= (num)=>(num*num)
+function update(){
+  startDate =Date.now();
+}
+
+
+function gravityTime()
+{
+  timeGravityX= Date.now();
+  timeGravityX-=startDate;
+}
+function gravity(){
+  
+  previousGravityX = gravityX; // Store the previous gravity value
+  gravityX = (velocity * timeGravityX / 1000 - 1 / 2 * 9.8 * onSquare(timeGravityX / 1000)) * 78.41194022524496;
+  changeGravityX = gravityX - previousGravityX; // Calculate the change in gravity
+
+
+}
+function inactivity(){
+    let inactivityTime=10000;
+    let inactivityTimeout;
+function resetInactivityTimer() {
+    clearTimeout(inactivityTimeout);
+    inactivityTimeout = setTimeout(pauseGame, inactivityTime);
+}
+
+function pauseGame() {
+    // Your code to pause the game here
+   // console.log("Game paused due to inactivity");
+    running=false;
+}
+
+// Listen for user interactions to reset the inactivity timer
+document.addEventListener("keydown", resetInactivityTimer);
+
+// Start the inactivity timer when the game loads
+resetInactivityTimer();
+}  
+ 
+  ctx.clearRect(0, 0, map.width, map.height);
+    carsVisuality(PlayerColorCar);
+
+
+
+
+    </script>
+</body>
+</html>
+
